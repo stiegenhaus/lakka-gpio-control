@@ -1,17 +1,6 @@
-# lakka_nespi_power
-Lakka 2.1 + NESPi CASE + Shutdown buttons
+# lakka-gpio-control
 
-
-
-
-
-Adding the ability of soft shutdown to lakka and the NESPI CASE+ on the Raspberry Pi 3 B+
-
-
-
-
-
-
+Adding the ability of soft shutdown, restart and reset ui to lakka on Raspberry Pi 3
 
 ### How to install
 
@@ -30,7 +19,7 @@ Adding the ability of soft shutdown to lakka and the NESPI CASE+ on the Raspberr
 
 4. In the terminal, type the one-line command below(Case sensitive):
 
-   wget -O - "https://github.com/marcelonovaes/lakka_nespi_power/raw/master/install.sh" | bash
+   wget -O - "https://github.com/edus44/lakka-gpio-control/raw/master/install.sh" | bash
 
 5. Your Raspberry Pi will reboot and you're done!
 
