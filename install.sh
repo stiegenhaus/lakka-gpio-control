@@ -23,8 +23,9 @@ wget "https://github.com/edus44/lakka-gpio-control/archive/master.zip"
 
 unzip -o master.zip
 cd lakka_nespi_power-master/
-cp -R lib/ /storage/
 mkdir -p /storage/scripts
+mkdir -p /storage/lib
+cp -R lib/ /storage/
 cp -R scripts/* /storage/scripts/
 
 
