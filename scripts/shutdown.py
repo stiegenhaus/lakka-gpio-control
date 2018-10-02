@@ -6,59 +6,72 @@ import time
 from multiprocessing import Process
 
 #initialize pins
-powerPin = 3 #pin 5
-ledPin = 14 #TXD
-resetPin = 2 #pin 13
-powerenPin = 4 #pin 5
+poweroffPin = 26
+resetPin = 21
+ejectPin = 20
 
 #initialize GPIO settings
 def init():
-	GPIO.setmode(GPIO.BCM)
-	GPIO.setup(powerPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.setup(resetPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.setup(ledPin, GPIO.OUT)
-	GPIO.setup(powerenPin, GPIO.OUT)
-	GPIO.output(powerenPin, GPIO.HIGH)
-	GPIO.setwarnings(False)
+  GPIO.setmode(GPIO.BCM)
+  GPIO.setup(poweroffPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(resetPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setup(ejectPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+  GPIO.setwarnings(False)
 
-#waits for user to hold button up to 1 second before issuing poweroff command
 def poweroff():
-	while True:
-		GPIO.wait_for_edge(powerPin, GPIO.FALLING)
-		os.system("shutdown -h now")
+  oldState = True
+  while True:
+    GPIO.wait_for_edge(poweroffPin, GPIO.FALLING)
 
-#blinks the LED to signal button being pushed
-def ledBlink():
-	while True:
-		GPIO.output(ledPin, GPIO.HIGH)
-		GPIO.wait_for_edge(powerPin, GPIO.FALLING)
-		start = time.time()
-		while GPIO.input(powerPin) == GPIO.LOW:
-			GPIO.output(ledPin, GPIO.LOW)
-			time.sleep(0.2)
-			GPIO.output(ledPin, GPIO.HIGH)
-			time.sleep(0.2)
+    state = GPIO.input(poweroffPin)
+    if state != oldState and state == False:
 
-#resets the pi
+      # print 'poweroff'
+      os.system("shutdown -h now")
+      time.sleep(1)
+    
+
 def reset():
-	while True:
-		GPIO.wait_for_edge(resetPin, GPIO.FALLING)
-		os.system("shutdown -r now")
+  oldState = True
+  while True:
+    GPIO.wait_for_edge(resetPin, GPIO.FALLING)
+
+    state = GPIO.input(resetPin)
+    if state != oldState and state == False:
+
+      # print 'reset'
+      os.system("pkill retroarch")
+      time.sleep(1)
+    
+
+
+def eject():
+  oldState = True
+  while True:
+    GPIO.wait_for_edge(ejectPin, GPIO.FALLING)
+
+    state = GPIO.input(ejectPin)
+    if state != oldState and state == False:
+
+      # print 'eject' 
+      os.system("shutdown -r now")
+      time.sleep(1)
+    
 
 
 if __name__ == "__main__":
-	#initialize GPIO settings
-	init()
-	#create a multiprocessing.Process instance for each function to enable parallelism 
-	powerProcess = Process(target = poweroff)
-	powerProcess.start()
-	ledProcess = Process(target = ledBlink)
-	ledProcess.start()
-	resetProcess = Process(target = reset)
-	resetProcess.start()
+  #initialize GPIO settings
+  init()
+  #create a multiprocessing.Process instance for each function to enable parallelism 
+  poweroffProcess = Process(target = poweroff)
+  poweroffProcess.start()
+  resetProcess = Process(target = reset)
+  resetProcess.start()
+  ejectProcess = Process(target = eject)
+  ejectProcess.start()
 
-	powerProcess.join()
-	ledProcess.join()
-	resetProcess.join()
+  poweroffProcess.join()
+  resetProcess.join()
+  ejectProcess.join()
 
-	GPIO.cleanup()
+  GPIO.cleanup()

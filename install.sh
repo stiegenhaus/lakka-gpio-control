@@ -15,7 +15,7 @@ cd /storage/
 
 #Step 3) Download this repository with all files needed ----
 
-wget "https://github.com/marcelonovaes/lakka_nespi_power/archive/master.zip"
+wget "https://github.com/edus44/lakka-gpio-control/archive/master.zip"
 
 #-----------------------------------------------------------
 
